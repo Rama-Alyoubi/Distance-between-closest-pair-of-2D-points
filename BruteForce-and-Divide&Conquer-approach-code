@@ -1,0 +1,59 @@
+import math
+def  BruteForceClosestPair(p):
+    d=float('inf')
+    n=len(p)
+
+    for i in range(n-1):
+        for j in range(i+1,n):
+            x=math.sqrt((p[i][0]-p[j][0])**2+(p[i][1]-p[j][1])**2)
+            if x<d:
+                point1=p[i][0],p[i][1]
+                point2=p[j][0],p[j][1]
+            d=min(d,x)
+            
+    return d
+
+def DivideAndConquerClosestPair(p):
+    d=float('inf')
+    n=len(p)
+    p1=[]
+    p2=[]
+    p3=[] 
+    dis=[]
+    px=[i[0] for i in p]
+    c=(min(px)+max(px))/2
+    
+    
+    if n==1:
+        return
+    elif n==2:
+        d= math.sqrt((p[0][0]-p[1][0])**2+(p[0][1]-p[1][1])**2)
+        return d
+    elif max(px)==min(px):
+        return BruteForceClosestPair(p)
+    
+    for i in range(n):
+        if p[i][0]<=c:
+            p1.insert(0,p[i])
+        else:
+            p2.insert(0,p[i])
+
+        if p[i][0]-c<d:
+            p3.insert(0,p[i])
+            
+    if len(p1) and len(p2) != 0:
+        d1=DivideAndConquerClosestPair(p1)
+        d2=DivideAndConquerClosestPair(p2)
+        dis.insert(0,d1)
+        dis.insert(0,d2)
+    
+    if len(p3)==len(p):
+        return BruteForceClosestPair(p3)
+    else:
+        d3=DivideAndConquerClosestPair(p3)
+        dis.insert(0,d3)
+    d=min(dis)
+    return d
+p = [[34, 84], [53, 2], [28, 21], [72, 47], [78, 38], [9, 35], [23, 7], [21, 77], [63, 41], [73, 68]]
+
+print("the minimum distance between any two points is\n",DivideAndConquerClosestPair(p))
